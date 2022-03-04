@@ -6,10 +6,6 @@ const { MongoClient, ObjectID } = require("mongodb");
 const connectionURL = "mongodb://127.0.0.1:27017";
 const databaseName = "task-manager";
 
-const id = new ObjectID();
-console.log(id.id.length);
-console.log(id.toHexString().length);
-
 MongoClient.connect(
   connectionURL,
   { useNewUrlParser: true },
@@ -21,31 +17,39 @@ MongoClient.connect(
     // console.log("connected correctly");
     const db = client.db(databaseName);
 
-    // db.collection("users").insertOne(
-    //   {
-    //     name: "Tiyush",
-    //     age: 22,
-    //   },
-    //   (error, result) => {
-    //     if (error) {
-    //       return console.log("Unable to insert document");
-    //     }
-    //     // console.log("ok");
-    //     console.log(result);
-    //   }
-    // );
+    db.collection("users").findOne({ name: "Piyush" }, (error, user) => {
+      if (error) {
+        return console.log("unable to fetch");
+      }
+      console.log(user);
+    });
 
-    db.collection("users").insertMany(
-      [
-        { name: "Aayush", age: 22 },
-        { name: "Piyush", age: 21 },
-      ],
-      (error, result) => {
+    db.collection("users").findOne(
+      { _id: new ObjectID("62227887ccd1eeb5276d658c") },
+      (error, user) => {
         if (error) {
-          return console.log("unable to insert documents");
+          return console.log("unable to fetch");
         }
-        console.log(result);
+        console.log(user);
       }
     );
+
+    db.collection("users")
+      .find({})
+      .toArray((error, users) => {
+        if (error) {
+          return console.log("can't fetch docs");
+        }
+        console.log(users);
+      });
+
+    db.collection("users")
+      .find({})
+      .count((error, count) => {
+        if (error) {
+          return console.log("can't fetch docs");
+        }
+        console.log(count);
+      });
   }
 );
