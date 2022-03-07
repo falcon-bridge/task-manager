@@ -17,39 +17,22 @@ MongoClient.connect(
     // console.log("connected correctly");
     const db = client.db(databaseName);
 
-    db.collection("users").findOne({ name: "Piyush" }, (error, user) => {
-      if (error) {
-        return console.log("unable to fetch");
-      }
-      console.log(user);
-    });
-
-    db.collection("users").findOne(
-      { _id: new ObjectID("62227887ccd1eeb5276d658c") },
-      (error, user) => {
-        if (error) {
-          return console.log("unable to fetch");
-        }
-        console.log(user);
-      }
-    );
-
     db.collection("users")
-      .find({})
-      .toArray((error, users) => {
-        if (error) {
-          return console.log("can't fetch docs");
+      .updateOne(
+        {
+          _id: new ObjectID("62227887ccd1eeb5276d658d"),
+        },
+        {
+          $set: {
+            name: "Raunak",
+          },
         }
-        console.log(users);
-      });
-
-    db.collection("users")
-      .find({})
-      .count((error, count) => {
-        if (error) {
-          return console.log("can't fetch docs");
-        }
-        console.log(count);
+      )
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   }
 );
