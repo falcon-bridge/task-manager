@@ -56,13 +56,16 @@ router.post("/users/login", async (req, res) => {
 //     });
 // });
 
-router.get("/users", auth, async (req, res) => {
-  try {
-    const users = await User.find({});
-    res.send(users);
-  } catch (e) {
-    res.status(500).send();
-  }
+//since any user shouldn't see the details of other users, we will show his details only
+
+router.get("/users/me", auth, async (req, res) => {
+  // try {
+  //   const users = await User.find({});
+  //   res.send(users);
+  // } catch (e) {
+  //   res.status(500).send();
+  // }
+  res.send(req.user);
 });
 
 // router.get("/users/:id", (req, res) => {
