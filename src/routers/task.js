@@ -50,14 +50,33 @@ router.post("/tasks", auth, async (req, res) => {
 //     });
 // });
 
-router.get("/tasks", async (req, res) => {
+// router.get("/tasks", async (req, res) => {
+//   try {
+//     const tasks = await Task.find({});
+//     res.send(tasks);
+//   } catch (e) {
+//     res.status(500).send();
+//   }
+// });
+
+router.get("/tasks", auth, async (req, res) => {
   try {
-    const tasks = await Task.find({});
+    const tasks = await Task.find({ owner: req.user._id });
     res.send(tasks);
   } catch (e) {
     res.status(500).send();
   }
 });
+
+// router.get("/tasks", auth, async (req, res) => {
+//   try {
+//     // const tasks = await Task.find({ owner: req.user._id });
+//     await req.user.populate("tasks").execPopulate();
+//     res.send(req.user.tasks);
+//   } catch (e) {
+//     res.status(500).send();
+//   }
+// });
 
 // router.get("/tasks/:id", (req, res) => {
 //   const _id = req.params.id;
@@ -74,14 +93,31 @@ router.get("/tasks", async (req, res) => {
 //     });
 // });
 
-router.get("/tasks/:id", async (req, res) => {
+// router.get("/tasks/:id", async (req, res) => {
+//   const _id = req.params.id;
+
+//   try {
+//     const task = await Task.findById(_id);
+//     if (!task) {
+//       return res.status(404).send();
+//     }
+//     res.send(task);
+//   } catch (e) {
+//     res.status(500).send();
+//   }
+// });
+
+router.get("/tasks/:id", auth, async (req, res) => {
   const _id = req.params.id;
 
   try {
-    const task = await Task.findById(_id);
+    // const task = await Task.findById(_id);
+    const task = await Task.findOne({ _id, owner: req.user._id });
+
     if (!task) {
       return res.status(404).send();
     }
+
     res.send(task);
   } catch (e) {
     res.status(500).send();
