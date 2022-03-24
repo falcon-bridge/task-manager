@@ -46,6 +46,14 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
+//setting the virtual property for relationship to set up
+
+userSchema.virtual("tasks", {
+  ref: "Task",
+  localField: "_id",
+  foreignField: "owner",
+});
+
 //setting a method on the whole collection itself (model methods)
 
 userSchema.statics.findByCredentials = async (email, password) => {
