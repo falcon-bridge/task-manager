@@ -60,8 +60,17 @@ router.post("/tasks", auth, async (req, res) => {
 // });
 
 router.get("/tasks", auth, async (req, res) => {
+  //if query isn't provided, it should fetch all task
+  const findParameter = { owner: req.user._id };
+
+  //the query field will be a string and not a boolean value
+  if (req.query.completed) {
+    const val = req.query.completed === "true";
+    findParameter.completed = val;
+  }
+
   try {
-    const tasks = await Task.find({ owner: req.user._id });
+    const tasks = await Task.find(findParameter);
     res.send(tasks);
   } catch (e) {
     res.status(500).send();
@@ -69,9 +78,16 @@ router.get("/tasks", auth, async (req, res) => {
 });
 
 // router.get("/tasks", auth, async (req, res) => {
+//   const match = {};
+
+//   if (req.query.completed) {
+//     match.completed = req.query.completed === "true";
+//   }
+
 //   try {
 //     // const tasks = await Task.find({ owner: req.user._id });
-//     await req.user.populate("tasks").execPopulate();
+//     // await req.user.populate("tasks").execPopulate();
+//     await req.user.populate({ path: "tasks", match }).execPopulate();
 //     res.send(req.user.tasks);
 //   } catch (e) {
 //     res.status(500).send();
