@@ -5,48 +5,53 @@ const jwt = require("jsonwebtoken");
 
 const Task = require("../models/task");
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    trim: true,
-  },
-  email: {
-    type: String,
-    index: true,
-    unique: true,
-    required: true,
-    trim: true,
-    lowercase: true,
-    validate(email) {
-      if (!validator.isEmail(email)) {
-        throw new Error("Email is invalid");
-      }
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      trim: true,
     },
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 7,
-    trim: true,
-  },
-  age: {
-    type: Number,
-    default: 0,
-    validate(value) {
-      if (value < 0) {
-        throw new Error("Age can't be negative");
-      }
-    },
-  },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true,
+    email: {
+      type: String,
+      index: true,
+      unique: true,
+      required: true,
+      trim: true,
+      lowercase: true,
+      validate(email) {
+        if (!validator.isEmail(email)) {
+          throw new Error("Email is invalid");
+        }
       },
     },
-  ],
-});
+    password: {
+      type: String,
+      required: true,
+      minlength: 7,
+      trim: true,
+    },
+    age: {
+      type: Number,
+      default: 0,
+      validate(value) {
+        if (value < 0) {
+          throw new Error("Age can't be negative");
+        }
+      },
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
 //setting the virtual property for relationship to set up
 
