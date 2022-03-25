@@ -59,6 +59,10 @@ router.post("/tasks", auth, async (req, res) => {
 //   }
 // });
 
+//GET /tskd?completed=true
+//GET /tskd?limit=10&skip=20
+//GET /tskd?sortBy=createdAt:sesc
+
 router.get("/tasks", auth, async (req, res) => {
   //if query isn't provided, it should fetch all task
   const findParameter = { owner: req.user._id };
@@ -69,11 +73,19 @@ router.get("/tasks", auth, async (req, res) => {
     findParameter.completed = val;
   }
 
+  const sortParameter = {};
+
+  if (req.query.sortBy) {
+    const parts = req.query.sortBy.split(":");
+    sortParameter[parts[0]] = parts[1] === "desc" ? -1 : 1;
+  }
+
   try {
     // const tasks = await Task.find(findParameter)
     const tasks = await Task.find(findParameter)
       .limit(parseInt(req.query.limit))
-      .skip(parseInt(req.query.skip));
+      .skip(parseInt(req.query.skip))
+      .sort(sortParameter);
     res.send(tasks);
   } catch (e) {
     res.status(500).send();
@@ -82,10 +94,16 @@ router.get("/tasks", auth, async (req, res) => {
 
 // router.get("/tasks", auth, async (req, res) => {
 //   const match = {};
+//   const sort = {};
 
 //   if (req.query.completed) {
 //     match.completed = req.query.completed === "true";
 //   }
+
+// if (req.query.sortBy) {
+//   const parts = req.query.sortBy.split(":");
+//   sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
+// }
 
 //   try {
 //     // const tasks = await Task.find({ owner: req.user._id });
@@ -97,6 +115,7 @@ router.get("/tasks", auth, async (req, res) => {
 //         options: {
 //           limit: parseInt(req.query.limit),
 //           skip: parseInt(req.query.skip),
+//           sort,
 //         },
 //       })
 //       .execPopulate();
