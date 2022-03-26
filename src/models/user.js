@@ -47,6 +47,9 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
+    avatar: {
+      type: Buffer, //the image will be stored in the form of binary data
+    },
   },
   {
     timestamps: true,
