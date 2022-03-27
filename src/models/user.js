@@ -108,6 +108,7 @@ userSchema.methods.toJSON = function () {
 
   delete userObject.password;
   delete userObject.tokens;
+  delete userObject.avatar; //it's stored as binary data and is of comparatively larger size, if we want to get the avatar, we have made a different roue for it
 
   return userObject;
 };
